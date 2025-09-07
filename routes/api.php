@@ -4,6 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AgentController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InsuranceController;
+use App\Http\Controllers\PolicyController;
+use App\Http\Controllers\PolicyAttributeController;
+use App\Http\Controllers\PolicyAttributeValuesController;
 
 
 // Route::middleware(['auth:api', 'permission:edit posts'])->group(function () {
@@ -16,10 +22,26 @@ Route::get('/test', function () {
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::apiResource('agents', AgentController::class);
+Route::apiResource('users', UserController::class);
+Route::apiResource('insurance_providers', InsuranceController::class);
+Route::apiResource('policies', PolicyController::class);
+
+
+
+
 
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
-    Route::apiResource('users', UserController::class);
+    // Route::apiResource('users', UserController::class);
+
+
+
+    // api endpoints 
+    Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('policy_attributes', PolicyAttributeController::class);
+    Route::apiResource('policy_attribute_values', PolicyAttributeValuesController::class);
+
 });
 
