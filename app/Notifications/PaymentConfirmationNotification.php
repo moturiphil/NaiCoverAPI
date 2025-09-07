@@ -44,19 +44,22 @@ class PaymentConfirmationNotification extends Notification implements ShouldQueu
             $customerName = trim($notifiable->first_name . ' ' . $notifiable->last_name) ?: 'Valued Customer';
         }
 
-        // Format payment amount (assuming it's stored as cents or decimal)
-        $amount = '$' . number_format($this->payment->amount ?? 0, 2);
+        // Format payment amount
+        $amount = '$' . number_format($this->payment->amount, 2);
         
-        $paymentDate = $this->payment->created_at ? $this->payment->created_at->format('F j, Y g:i A') : 'Unknown';
+        $paymentDate = $this->payment->paid_at ? 
+            $this->payment->paid_at->format('F j, Y g:i A') : 
+            $this->payment->created_at->format('F j, Y g:i A');
 
         return (new MailMessage)
             ->subject('Payment Confirmation - InsureMore')
             ->greeting("Hello {$customerName}!")
             ->line('We have successfully received your payment.')
-            ->line("Payment ID: #{$this->payment->id}")
+            ->line("Payment Reference: {$this->payment->payment_reference}")
             ->line("Amount: {$amount}")
             ->line("Payment Date: {$paymentDate}")
-            ->line("Payment Method: " . ($this->payment->payment_method ?? 'Card'))
+            ->line("Payment Method: " . ucfirst($this->payment->method))
+            ->line("Status: " . ucfirst($this->payment->status))
             ->action('View Payment Details', url("/payments/{$this->payment->id}"))
             ->line('Your payment has been processed and your account has been updated accordingly.')
             ->line('Thank you for your payment and for choosing InsureMore!')
@@ -72,10 +75,12 @@ class PaymentConfirmationNotification extends Notification implements ShouldQueu
     {
         return [
             'payment_id' => $this->payment->id,
-            'amount' => $this->payment->amount ?? 0,
-            'payment_method' => $this->payment->payment_method ?? 'Unknown',
+            'payment_reference' => $this->payment->payment_reference,
+            'amount' => $this->payment->amount,
+            'payment_method' => $this->payment->method,
+            'status' => $this->payment->status,
             'notification_type' => 'payment_confirmation',
-            'payment_date' => $this->payment->created_at,
+            'payment_date' => $this->payment->paid_at ?? $this->payment->created_at,
         ];
     }
 }

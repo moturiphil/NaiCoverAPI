@@ -75,6 +75,24 @@ class NotificationApiTest extends TestCase
             ]);
     }
 
+    public function test_can_send_payment_confirmation_via_api(): void
+    {
+        $user = User::factory()->create();
+        $customer = Customer::factory()->create(['user_id' => $user->id]);
+        $order = \App\Models\Order::factory()->create(['customer_id' => $customer->id]);
+        $payment = \App\Models\Payment::factory()->successful()->create(['order_id' => $order->id]);
+
+        $response = $this->postJson('/api/notifications/payment-confirmation', [
+            'payment_id' => $payment->id,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'message' => 'Payment confirmation sent successfully',
+            ]);
+    }
+
     public function test_can_send_bulk_notifications_via_api(): void
     {
         $users = User::factory()->count(3)->create();

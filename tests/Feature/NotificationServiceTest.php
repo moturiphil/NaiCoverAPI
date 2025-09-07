@@ -54,6 +54,19 @@ class NotificationServiceTest extends TestCase
         Notification::assertSentTo($user, PolicyCreatedNotification::class);
     }
 
+    public function test_can_send_payment_confirmation_notification(): void
+    {
+        $user = User::factory()->create();
+        $customer = Customer::factory()->create(['user_id' => $user->id]);
+        $order = \App\Models\Order::factory()->create(['customer_id' => $customer->id]);
+        $payment = Payment::factory()->successful()->create(['order_id' => $order->id]);
+
+        $result = $this->notificationService->sendPaymentConfirmationNotification($payment);
+
+        $this->assertTrue($result);
+        Notification::assertSentTo($user, PaymentConfirmationNotification::class);
+    }
+
     public function test_policy_notification_fails_without_user(): void
     {
         $policy = Policy::factory()->create(['customer_id' => null]);

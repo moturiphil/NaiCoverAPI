@@ -121,25 +121,22 @@ class NotificationService
 
     /**
      * Get user from payment (helper method)
-     * This will need to be adapted based on actual Payment model relationships
      */
     private function getUserFromPayment(Payment $payment): ?User
     {
-        // This is a placeholder - we'll need to check the actual Payment model structure
-        // Possible relationships: payment->user, payment->customer->user, payment->policy->customer->user
-        
-        if (method_exists($payment, 'user') && $payment->user) {
-            return $payment->user;
+        try {
+            // Get user through payment -> order -> customer -> user relationship
+            if ($payment->order && $payment->order->customer && $payment->order->customer->user) {
+                return $payment->order->customer->user;
+            }
+            
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Error getting user from payment', [
+                'payment_id' => $payment->id,
+                'error' => $e->getMessage()
+            ]);
+            return null;
         }
-        
-        if (method_exists($payment, 'customer') && $payment->customer && $payment->customer->user) {
-            return $payment->customer->user;
-        }
-        
-        if (method_exists($payment, 'policy') && $payment->policy && $payment->policy->customer && $payment->policy->customer->user) {
-            return $payment->policy->customer->user;
-        }
-
-        return null;
     }
 }
