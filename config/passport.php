@@ -43,4 +43,5 @@ return [
 
     'connection' => env('PASSPORT_CONNECTION'),
 
+    'ignore_migrations' => true,
 ];
