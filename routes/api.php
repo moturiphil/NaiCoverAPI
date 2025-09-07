@@ -10,6 +10,7 @@ use App\Http\Controllers\InsuranceController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\PolicyAttributeController;
 use App\Http\Controllers\PolicyAttributeValuesController;
+use App\Http\Controllers\NotificationController;
 
 
 // Route::middleware(['auth:api', 'permission:edit posts'])->group(function () {
@@ -42,6 +43,15 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('policy_attributes', PolicyAttributeController::class);
     Route::apiResource('policy_attribute_values', PolicyAttributeValuesController::class);
+
+    // Notification endpoints
+    Route::prefix('notifications')->group(function () {
+        Route::post('welcome', [NotificationController::class, 'sendWelcome']);
+        Route::post('policy-created', [NotificationController::class, 'sendPolicyCreated']);
+        Route::post('payment-confirmation', [NotificationController::class, 'sendPaymentConfirmation']);
+        Route::post('bulk', [NotificationController::class, 'sendBulkNotification']);
+        Route::get('history/{userId}', [NotificationController::class, 'getNotificationHistory']);
+    });
 
 });
 
