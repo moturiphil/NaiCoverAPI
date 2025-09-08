@@ -21,6 +21,9 @@ return new class extends Migration {
             $table->string('kcse_certificate_path')->nullable();
             $table->string('diploma_certificate_path')->nullable();
             $table->string('degree_certificate_path')->nullable();
+            $table->boolean('is_verified')->default(false);
+            $table->string('verification_status')->default('pending');
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

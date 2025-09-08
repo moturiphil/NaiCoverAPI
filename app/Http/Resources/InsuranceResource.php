@@ -15,12 +15,13 @@ class InsuranceResource extends JsonResource
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-        return [
-            'insurance_id' => $this->id,
-            'name' => $this->name,
-            'contact_person' => $this->contact_person,
-            'contact_email' => $this->contact_email,
-            'contact_phone' => $this->contact_phone,
-        ];
+        // return [
+        //     'insurance_id' => $this->id,
+        //     'name' => $this->name,
+        //     'contact_person' => $this->contact_person,
+        //     'contact_email' => $this->contact_email,
+        //     'contact_phone' => $this->contact_phone,
+        // ];
+        return parent::toArray($request);
     }
 }
