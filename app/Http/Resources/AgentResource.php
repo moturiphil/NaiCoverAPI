@@ -29,6 +29,7 @@ class AgentResource extends JsonResource
             'cv' => $this->cv_path,
             'photo' => $this->passport_photo_path,
             'diploma_certificate' => $this->diploma_certificate_path,
+            'degree_certificate' => $this->degree_certificate_path,
         ];
     }
 }
