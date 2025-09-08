@@ -29,6 +29,15 @@ Route::apiResource('insurance_providers', InsuranceController::class);
 Route::apiResource('policies', PolicyController::class);
 
 
+Route::prefix('notifications')->group(function () {
+    Route::post('welcome', [NotificationController::class, 'sendWelcome']);
+    Route::post('policy-created', [NotificationController::class, 'sendPolicyCreated']);
+    Route::post('payment-confirmation', [NotificationController::class, 'sendPaymentConfirmation']);
+    Route::post('bulk', [NotificationController::class, 'sendBulkNotification']);
+    Route::get('history/{userId}', [NotificationController::class, 'getNotificationHistory']);
+});
+
+
 
 
 
@@ -45,13 +54,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::apiResource('policy_attribute_values', PolicyAttributeValuesController::class);
 
     // Notification endpoints
-    Route::prefix('notifications')->group(function () {
-        Route::post('welcome', [NotificationController::class, 'sendWelcome']);
-        Route::post('policy-created', [NotificationController::class, 'sendPolicyCreated']);
-        Route::post('payment-confirmation', [NotificationController::class, 'sendPaymentConfirmation']);
-        Route::post('bulk', [NotificationController::class, 'sendBulkNotification']);
-        Route::get('history/{userId}', [NotificationController::class, 'getNotificationHistory']);
-    });
+
 
 });
 
