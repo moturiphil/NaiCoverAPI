@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
     public function index()
     {
         $users = User::all();
+
         return UserResource::collection($users);
     }
 
@@ -23,7 +24,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'sometimes|required|string|email|max:255|unique:users,email,'.$user->id,
         ]);
 
         $user->update($validated);
@@ -36,7 +37,7 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json([
-            'message' => 'User deleted successfully'
+            'message' => 'User deleted successfully',
         ]);
     }
 }

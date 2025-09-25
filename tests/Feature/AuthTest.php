@@ -23,14 +23,14 @@ class AuthTest extends TestCase
             ->assertJsonStructure([
                 'user' => ['id', 'name', 'email'],
                 'access_token',
-                'token_type'
+                'token_type',
             ]);
     }
 
     public function test_user_can_login()
     {
         $user = User::factory()->create([
-            'password' => bcrypt('password')
+            'password' => bcrypt('password'),
         ]);
 
         $response = $this->postJson('/api/login', [
@@ -42,7 +42,7 @@ class AuthTest extends TestCase
             ->assertJsonStructure([
                 'user' => ['id', 'name', 'email'],
                 'access_token',
-                'token_type'
+                'token_type',
             ]);
     }
 }

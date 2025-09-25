@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Policy;
 use App\Models\Payment;
+use App\Models\Policy;
+use App\Models\User;
 use App\Services\NotificationService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class NotificationController extends Controller
@@ -154,7 +154,7 @@ class NotificationController extends Controller
     public function getNotificationHistory(Request $request, int $userId): JsonResponse
     {
         $user = User::findOrFail($userId);
-        
+
         $notifications = $user->notifications()
             ->orderBy('created_at', 'desc')
             ->paginate(20);

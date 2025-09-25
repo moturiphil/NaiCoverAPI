@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PolicyType extends Model
 {
@@ -11,7 +11,7 @@ class PolicyType extends Model
 
     /**
      * The attributes that are mass assignable.
-     * 
+     *
      * Using guarded as an empty array allows all fields to be mass assignable,
      * but it's safer to explicitly define $fillable for better security.
      */

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Policy extends Model
 {
@@ -11,6 +11,7 @@ class Policy extends Model
     // Define fillable attributes
 
     use HasFactory;
+
     protected $guarded = [];
 
     public function customer()

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Laravel already has a notifications table built-in
         // This migration ensures it exists with the correct structure
-        if (!Schema::hasTable('notifications')) {
+        if (! Schema::hasTable('notifications')) {
             Schema::create('notifications', function (Blueprint $table) {
                 $table->uuid('id')->primary();
                 $table->string('type');

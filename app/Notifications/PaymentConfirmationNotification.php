@@ -38,17 +38,17 @@ class PaymentConfirmationNotification extends Notification implements ShouldQueu
     public function toMail(object $notifiable): MailMessage
     {
         $customerName = 'Valued Customer';
-        
+
         // Try to get customer name from notification target (User model)
         if (isset($notifiable->first_name, $notifiable->last_name)) {
-            $customerName = trim($notifiable->first_name . ' ' . $notifiable->last_name) ?: 'Valued Customer';
+            $customerName = trim($notifiable->first_name.' '.$notifiable->last_name) ?: 'Valued Customer';
         }
 
         // Format payment amount
-        $amount = '$' . number_format($this->payment->amount, 2);
-        
-        $paymentDate = $this->payment->paid_at ? 
-            $this->payment->paid_at->format('F j, Y g:i A') : 
+        $amount = '$'.number_format($this->payment->amount, 2);
+
+        $paymentDate = $this->payment->paid_at ?
+            $this->payment->paid_at->format('F j, Y g:i A') :
             $this->payment->created_at->format('F j, Y g:i A');
 
         return (new MailMessage)
@@ -58,8 +58,8 @@ class PaymentConfirmationNotification extends Notification implements ShouldQueu
             ->line("Payment Reference: {$this->payment->payment_reference}")
             ->line("Amount: {$amount}")
             ->line("Payment Date: {$paymentDate}")
-            ->line("Payment Method: " . ucfirst($this->payment->method))
-            ->line("Status: " . ucfirst($this->payment->status))
+            ->line('Payment Method: '.ucfirst($this->payment->method))
+            ->line('Status: '.ucfirst($this->payment->status))
             ->action('View Payment Details', url("/payments/{$this->payment->id}"))
             ->line('Your payment has been processed and your account has been updated accordingly.')
             ->line('Thank you for your payment and for choosing InsureMore!')

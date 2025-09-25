@@ -19,7 +19,7 @@ class PaymentFactory extends Factory
     {
         return [
             'order_id' => Order::factory(),
-            'payment_reference' => 'PAY-' . $this->faker->unique()->numerify('############'),
+            'payment_reference' => 'PAY-'.$this->faker->unique()->numerify('############'),
             'amount' => $this->faker->randomFloat(2, 50, 2000),
             'method' => $this->faker->randomElement(['card', 'mobile_money', 'bank_transfer']),
             'status' => $this->faker->randomElement(['initiated', 'successful', 'failed', 'refunded']),

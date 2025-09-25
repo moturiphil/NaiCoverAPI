@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Customer;
 use App\Models\Policy;
-use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -22,11 +21,11 @@ class NotificationApiTest extends TestCase
     {
         parent::setUp();
         Notification::fake();
-        
+
         // Create an admin user for authentication
         $this->adminUser = User::factory()->create();
         $this->adminUser->assignRole('admin'); // Assuming role is set up
-        
+
         Passport::actingAs($this->adminUser);
     }
 

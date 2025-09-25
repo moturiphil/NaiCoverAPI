@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Payment extends Model
@@ -53,6 +53,6 @@ class Payment extends Model
             'order_id', // Local key on payments table
             'customer_id' // Local key on orders table (through customers)
         )->join('customers', 'orders.customer_id', '=', 'customers.id')
-         ->where('customers.user_id', '=', 'users.id');
+            ->where('customers.user_id', '=', 'users.id');
     }
 }

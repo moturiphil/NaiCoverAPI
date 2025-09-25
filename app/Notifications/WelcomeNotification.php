@@ -37,14 +37,14 @@ class WelcomeNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $userName = trim($this->user->first_name . ' ' . $this->user->last_name) ?: 'Valued Customer';
-        
+        $userName = trim($this->user->first_name.' '.$this->user->last_name) ?: 'Valued Customer';
+
         return (new MailMessage)
             ->subject('Welcome to InsureMore!')
             ->greeting("Hello {$userName}!")
             ->line('Welcome to InsureMore, your trusted insurance partner.')
             ->line('We are excited to have you on board and look forward to providing you with the best insurance solutions.')
-            ->line('Your account has been successfully created with the email: ' . $this->user->email)
+            ->line('Your account has been successfully created with the email: '.$this->user->email)
             ->action('Get Started', url('/dashboard'))
             ->line('If you have any questions, feel free to contact our support team.')
             ->line('Thank you for choosing InsureMore!');
@@ -59,7 +59,7 @@ class WelcomeNotification extends Notification implements ShouldQueue
     {
         return [
             'user_id' => $this->user->id,
-            'user_name' => trim($this->user->first_name . ' ' . $this->user->last_name),
+            'user_name' => trim($this->user->first_name.' '.$this->user->last_name),
             'user_email' => $this->user->email,
             'notification_type' => 'welcome',
         ];
