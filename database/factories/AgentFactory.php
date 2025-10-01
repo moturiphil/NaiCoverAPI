@@ -17,6 +17,7 @@ class AgentFactory extends Factory
             'police_clearance' => $this->faker->boolean(),
             'police_clearance_path' => $this->faker->optional()->filePath(),
             'cv_path' => $this->faker->optional()->filePath(),
+            'id_number' => fake()->unique()->numerify('########'),
             'id_path' => $this->faker->optional()->filePath(),
             'passport_photo_path' => $this->faker->optional()->filePath(),
             'kcse_certificate_path' => $this->faker->optional()->filePath(),

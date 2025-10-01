@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->boolean('police_clearance')->default(false);
             $table->string('police_clearance_path')->nullable();
             $table->string('cv_path')->nullable();
+            $table->string('id_number')->unique();
             $table->string('id_path')->nullable();
             $table->string('passport_photo_path')->nullable();
             $table->string('kcse_certificate_path')->nullable();
