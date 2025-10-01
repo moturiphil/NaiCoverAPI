@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Models\Customer;
-use App\Models\Policy;
 use App\Models\Payment;
-use App\Services\NotificationService;
-use App\Notifications\WelcomeNotification;
-use App\Notifications\PolicyCreatedNotification;
+use App\Models\Policy;
+use App\Models\User;
 use App\Notifications\PaymentConfirmationNotification;
+use App\Notifications\PolicyCreatedNotification;
+use App\Notifications\WelcomeNotification;
+use App\Services\NotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Notification;
@@ -90,7 +90,7 @@ class NotificationServiceTest extends TestCase
 
         $this->assertEquals(3, $results['sent']);
         $this->assertEquals(0, $results['failed']);
-        
+
         foreach ($users as $user) {
             Notification::assertSentTo($user, WelcomeNotification::class);
         }

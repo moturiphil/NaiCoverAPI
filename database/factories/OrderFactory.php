@@ -19,7 +19,7 @@ class OrderFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'order_reference' => 'ORDER-' . $this->faker->unique()->numerify('########'),
+            'order_reference' => 'ORDER-'.$this->faker->unique()->numerify('########'),
             'total_amount' => $this->faker->randomFloat(2, 100, 5000),
             'status' => $this->faker->randomElement(['pending', 'paid', 'cancelled', 'refunded']),
         ];

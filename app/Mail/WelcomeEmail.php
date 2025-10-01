@@ -37,8 +37,8 @@ class WelcomeEmail extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        $userName = trim($this->user->first_name . ' ' . $this->user->last_name) ?: 'Valued Customer';
-        
+        $userName = trim($this->user->first_name.' '.$this->user->last_name) ?: 'Valued Customer';
+
         return new Content(
             html: 'emails.welcome',
             text: 'emails.welcome-text',

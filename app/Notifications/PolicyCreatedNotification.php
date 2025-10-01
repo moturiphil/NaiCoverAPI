@@ -40,7 +40,7 @@ class PolicyCreatedNotification extends Notification implements ShouldQueue
         $customerName = 'Valued Customer';
         if ($this->policy->customer && $this->policy->customer->user) {
             $user = $this->policy->customer->user;
-            $customerName = trim($user->first_name . ' ' . $user->last_name) ?: 'Valued Customer';
+            $customerName = trim($user->first_name.' '.$user->last_name) ?: 'Valued Customer';
         }
 
         $providerName = $this->policy->provider ? $this->policy->provider->name ?? 'Your Insurance Provider' : 'Your Insurance Provider';
@@ -51,7 +51,7 @@ class PolicyCreatedNotification extends Notification implements ShouldQueue
             ->line('Great news! Your insurance policy has been successfully created.')
             ->line("Policy ID: #{$this->policy->id}")
             ->line("Provider: {$providerName}")
-            ->line("Created on: " . $this->policy->created_at->format('F j, Y'))
+            ->line('Created on: '.$this->policy->created_at->format('F j, Y'))
             ->action('View Policy Details', url("/policies/{$this->policy->id}"))
             ->line('Please keep this information for your records.')
             ->line('If you have any questions about your policy, please contact our customer service team.')

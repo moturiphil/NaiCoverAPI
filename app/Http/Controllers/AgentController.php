@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Resources\AgentResource;
 use App\Models\Agent;
+use Illuminate\Http\Request;
 
 class AgentController extends Controller
 {
@@ -12,6 +12,7 @@ class AgentController extends Controller
     public function index()
     {
         $agents = Agent::all();
+
         return AgentResource::collection($agents);
     }
 
@@ -28,6 +29,7 @@ class AgentController extends Controller
         ]);
 
         $agent = Agent::create($validated);
+
         return new AgentResource($agent);
     }
 
@@ -39,12 +41,14 @@ class AgentController extends Controller
         ]);
 
         $agent->update($validated);
+
         return new AgentResource($agent);
     }
 
     public function destroy(Agent $agent)
     {
         $agent->delete();
+
         return response()->json(['message' => 'Agent deleted successfully']);
     }
 }
