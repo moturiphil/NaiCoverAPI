@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\AgentUserEmailVefifyNotification;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -76,9 +78,9 @@ class AuthController extends Controller
     public function agent_registration(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'firstName' => 'required|string|max:255',
-            'middleName' => 'nullable|string|max:255',
-            'lastName' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:15|unique:users,phone_number',
             'id_no' => 'required|string|max:50|unique:agents,id_number',
@@ -100,20 +102,20 @@ class AuthController extends Controller
 
         // Handle file uploads first
         $documents = [];
-        if ($request->hasFile('idDocument')) {
-            $documents['idDocument'] = $request->file('idDocument')->store('documents/id', 'public');
+        if ($request->hasFile('id_document')) {
+            $documents['id_document'] = $request->file('id_document')->store('documents/id', 'public');
         }
-        if ($request->hasFile('passportPhoto')) {
-            $documents['passportPhoto'] = $request->file('passportPhoto')->store('documents/passport', 'public');
+        if ($request->hasFile('passport_photo')) {
+            $documents['passport_photo'] = $request->file('passport_photo')->store('documents/passport', 'public');
         }
         if ($request->hasFile('cv')) {
             $documents['cv'] = $request->file('cv')->store('documents/cv', 'public');
         }
-        if ($request->hasFile('clearanceCertificate')) {
-            $documents['clearanceCertificate'] = $request->file('clearanceCertificate')->store('documents/clearance', 'public');
+        if ($request->hasFile('clearance_certificate')) {
+            $documents['clearance_certificate'] = $request->file('clearance_certificate')->store('documents/clearance', 'public');
         }
-        if ($request->hasFile('proficiencyCertificate')) {
-            $documents['proficiencyCertificate'] = $request->file('proficiencyCertificate')->store('documents/proficiency', 'public');
+        if ($request->hasFile('proficiency_certificate')) {
+            $documents['proficiency_certificate'] = $request->file('proficiency_certificate')->store('documents/proficiency', 'public');
         }
 
         try {
@@ -121,9 +123,9 @@ class AuthController extends Controller
 
             // Create user
             $user = User::create([
-                'first_name' => $request->firstName,
-                'middle_name' => $request->middleName,
-                'last_name' => $request->lastName,
+                'first_name' => $request->first_name,
+                'middle_name' => $request->middle_name,
+                'last_name' => $request->last_name,
                 'phone_number' => $request->phone,
                 'email' => $request->email,
                 'password' => Hash::make('defaultPassword123'), // temporary password
@@ -137,27 +139,24 @@ class AuthController extends Controller
                 'education_level_id' => $request->education_level_id,
                 'area_of_operation' => $request->area_of_operation,
                 'experience_level_id' => $request->experience_level_id,
-                'id_path' => $documents['idDocument'] ?? null,
-                'passport_photo_path' => $documents['passportPhoto'] ?? null,
-                'kcse_certificate_path' => $documents['kcseCertificate'] ?? null,
-                'diploma_certificate_path' => $documents['diplomaCertificate'] ?? null,
-                'degree_certificate_path' => $documents['degreeCertificate'] ?? null,
+                'id_path' => $documents['id_document'] ?? null,
+                'passport_photo_path' => $documents['passport_photo'] ?? null,
+                'diploma_certificate_path' => $documents['diploma_certificate'] ?? null,
+                'degree_certificate_path' => $documents['degree_certificate'] ?? null,
                 'cv_path' => $documents['cv'] ?? null,
-                'police_clearance' => isset($documents['clearanceCertificate']),
-                'police_clearance_path' => $documents['clearanceCertificate'] ?? null,
-                'ira_certificate' => $documents['proficiencyCertificate'] ?? null,
+                'police_clearance_path' => $documents['clearance_certificate'] ?? null,
+                'ira_certificate' => $documents['proficiency_certificate'] ?? null,
             ]);
 
             DB::commit();
 
-            $token = $user->createToken('authToken')->accessToken;
+            // Mail::to($user->email)->send(new AgentUserEmailVefifyNotification($user));
 
             return response()->json([
                 'user' => $user,
                 'agent' => $agent,
                 'documents' => $documents,
-                'token' => $token,
-                'token_type' => 'Bearer',
+                'message'=> 'Verification email sent. Please check your inbox to verify your email before registration.'
             ], 201);
 
         } catch (\Exception $e) {
