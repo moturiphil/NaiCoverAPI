@@ -11,6 +11,8 @@ use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\PolicyAttributeController;
 use App\Http\Controllers\PolicyAttributeValuesController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\EducationController;
 
 
 // Route::middleware(['auth:api', 'permission:edit posts'])->group(function () {
@@ -28,7 +30,8 @@ Route::apiResource('agents', AgentController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('insurance_providers', InsuranceController::class);
 Route::apiResource('policies', PolicyController::class);
-
+Route::apiResource('experience', ExperienceController::class);
+Route::apiResource('education', EducationController::class);
 
 Route::prefix('notifications')->group(function () {
     Route::post('welcome', [NotificationController::class, 'sendWelcome']);
