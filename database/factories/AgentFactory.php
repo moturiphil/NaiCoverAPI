@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Models\EducationLevel;
+use App\Models\ExperienceLevel;
 
 /**
  * @extends Factory<\App\Models\Agent>
@@ -14,15 +16,18 @@ class AgentFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'police_clearance' => $this->faker->boolean(),
-            'police_clearance_path' => $this->faker->optional()->filePath(),
-            'cv_path' => $this->faker->optional()->filePath(),
+            'education_level_id' => EducationLevel::inRandomOrder()->first()->id,
+            'experience_level_id' => ExperienceLevel::inRandomOrder()->first()->id,
+            'area_of_operation' => $this->faker->city(),
+            'police_clearance_path' => $this->faker->filePath(),
+            'cv_path' => $this->faker->filePath(),
             'id_number' => fake()->unique()->numerify('########'),
-            'id_path' => $this->faker->optional()->filePath(),
-            'passport_photo_path' => $this->faker->optional()->filePath(),
-            'kcse_certificate_path' => $this->faker->optional()->filePath(),
-            'diploma_certificate_path' => $this->faker->optional()->filePath(),
-            'degree_certificate_path' => $this->faker->optional()->filePath(),
+            'id_path' => $this->faker->filePath(),
+            'passport_photo_path' => $this->faker->filePath(),
+            // 'kcse_certificate_path' => $this->faker->optional()->filePath(),
+            'diploma_certificate_path' => $this->faker->filePath(),
+            'degree_certificate_path' => $this->faker->filePath(),
+            'ira_certificate' => $this->faker->filePath(),
         ];
     }
-}
+};

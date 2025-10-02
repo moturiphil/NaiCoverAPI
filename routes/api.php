@@ -23,6 +23,7 @@ Route::get('/test', function () {
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('agent/registration', [AuthController::class, 'agent_registration']);
 Route::apiResource('agents', AgentController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('insurance_providers', InsuranceController::class);
@@ -48,7 +49,7 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
 
 
 
-    // api endpoints 
+    // api endpoints
     Route::apiResource('customers', CustomerController::class);
     Route::apiResource('policy_attributes', PolicyAttributeController::class);
     Route::apiResource('policy_attribute_values', PolicyAttributeValuesController::class);

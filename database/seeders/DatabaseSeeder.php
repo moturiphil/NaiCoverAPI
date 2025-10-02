@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         // $this->call(RolePermissionSeeder::class);
         $this->call([
             UserSeeder::class,
+            EducationLevelSeeder::class,
+            ExperienceLevelSeeder::class,
             AgentSeeder::class,
             PolicyTypeSeeder::class,
             PolicyAttributeSeeder::class,

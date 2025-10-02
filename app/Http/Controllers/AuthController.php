@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -69,6 +71,104 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
+
+    // Agent Registration Method
+    public function agent_registration(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|string|max:255',
+            'middleName' => 'nullable|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:15|unique:users,phone_number',
+            'id_no' => 'required|string|max:50|unique:agents,id_number',
+            'education_level_id' => 'required|exists:education_levels,id',
+            'area_of_operation' => 'nullable|string|max:255',
+            'experience_level_id' => 'required|exists:experience_levels,id',
+
+            // Documents
+            'idDocument' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'passportPhoto' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'cv' => 'nullable|file|mimes:pdf,doc,docx|max:4096',
+            'clearanceCertificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'proficiencyCertificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:4096',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // Handle file uploads first
+        $documents = [];
+        if ($request->hasFile('idDocument')) {
+            $documents['idDocument'] = $request->file('idDocument')->store('documents/id', 'public');
+        }
+        if ($request->hasFile('passportPhoto')) {
+            $documents['passportPhoto'] = $request->file('passportPhoto')->store('documents/passport', 'public');
+        }
+        if ($request->hasFile('cv')) {
+            $documents['cv'] = $request->file('cv')->store('documents/cv', 'public');
+        }
+        if ($request->hasFile('clearanceCertificate')) {
+            $documents['clearanceCertificate'] = $request->file('clearanceCertificate')->store('documents/clearance', 'public');
+        }
+        if ($request->hasFile('proficiencyCertificate')) {
+            $documents['proficiencyCertificate'] = $request->file('proficiencyCertificate')->store('documents/proficiency', 'public');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Create user
+            $user = User::create([
+                'first_name' => $request->firstName,
+                'middle_name' => $request->middleName,
+                'last_name' => $request->lastName,
+                'phone_number' => $request->phone,
+                'email' => $request->email,
+                'password' => Hash::make('defaultPassword123'), // temporary password
+                'role' => 'agent',
+            ]);
+
+            // Create agent profile
+            $agent = Agent::create([
+                'user_id' => $user->id,
+                'id_number' => $request->id_no,
+                'education_level_id' => $request->education_level_id,
+                'area_of_operation' => $request->area_of_operation,
+                'experience_level_id' => $request->experience_level_id,
+                'id_path' => $documents['idDocument'] ?? null,
+                'passport_photo_path' => $documents['passportPhoto'] ?? null,
+                'kcse_certificate_path' => $documents['kcseCertificate'] ?? null,
+                'diploma_certificate_path' => $documents['diplomaCertificate'] ?? null,
+                'degree_certificate_path' => $documents['degreeCertificate'] ?? null,
+                'cv_path' => $documents['cv'] ?? null,
+                'police_clearance' => isset($documents['clearanceCertificate']),
+                'police_clearance_path' => $documents['clearanceCertificate'] ?? null,
+                'ira_certificate' => $documents['proficiencyCertificate'] ?? null,
+            ]);
+
+            DB::commit();
+
+            $token = $user->createToken('authToken')->accessToken;
+
+            return response()->json([
+                'user' => $user,
+                'agent' => $agent,
+                'documents' => $documents,
+                'token' => $token,
+                'token_type' => 'Bearer',
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Registration failed',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     public function logout(Request $request)
     {
